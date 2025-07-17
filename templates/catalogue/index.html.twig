@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Acceuil{% endblock %}
+
+
+
+{% block body %}
+<h1>Menu du jour</h1>
+   <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for plat in plats %}
+            <div class="col">
+                <div class="card h-100">
+                    {% if plat.image %}
+                        <img src="{{ asset('uploads/images/' ~ plat.image) }}" class="card-img-top" alt="{{ plat.libelle }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ plat.libelle }}</h5>
+                        <p class="card-text">{{ plat.description }}</p>
+                        <p class="card-text"><strong>{{ plat.prix }} €</strong></p>
+                        <a href="{{ path('app_panier_ajouter', { id: plat.id }) }}" class="btn btn-success">Ajouter au panier</a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <p>Aucun plat disponible pour le moment.</p>
+        {% endfor %}
+    </div>
+
+    <hr class="my-5">
+
+    <h2>Catégories</h2>
+    <ul class="list-group">
+        {% for categorie in categories %}
+            <li class="list-group-item">
+                <a href="{{ path('app_catalogue_categorie_plats', { id: categorie.id }) }}">{{ categorie.libelle }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+
+</div>
+{% endblock %}

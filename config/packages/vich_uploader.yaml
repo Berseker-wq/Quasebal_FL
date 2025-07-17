@@ -1,0 +1,8 @@
+vich_uploader:
+    db_driver: orm
+
+    mappings:
+        plat_image:
+            uri_prefix: /uploads/images/plats
+            upload_destination: '%kernel.project_dir%/public/uploads/images/plats'
+            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer

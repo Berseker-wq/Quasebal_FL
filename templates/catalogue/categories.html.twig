@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<h2 class="mt-5 mb-4">Catégories</h2>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+  {% for categorie in categories %}
+    <div class="col">
+      <div class="card h-100">
+        <a href="{{ path('app_catalogue_categorie_plats', { 'id': categorie.id }) }}" class="text-decoration-none text-dark">
+          <img src="{{ asset('uploads/images/' ~ categorie.image) }}" 
+               class="card-img-top" 
+               alt="{{ categorie.libelle }}" 
+               style="height: 200px; object-fit: cover;">
+          <div class="card-body">
+            <h5 class="card-title">{{ categorie.libelle }}</h5>
+            {# Ajoute ici une description si elle existe, sinon supprime ce bloc #}
+            {# <p class="card-text">Description ou texte ici.</p> #}
+          </div>
+        </a>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+{% endblock %}

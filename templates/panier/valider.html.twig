@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Validation du panier{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        /* ici tu peux coller le CSS au-dessus si tu ne veux pas toucher à base.html.twig */
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="form-container">
+    <h1>Validation de votre panier</h1>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger">{{ message }}</div>
+    {% endfor %}
+
+    {% if produitsPanier is empty %}
+        <p>Votre panier est vide.</p>
+        <a href="{{ path('app_catalogue_plats') }}" class="btn btn-primary">Retour aux plats</a>
+    {% else %}
+        <form method="post" action="{{ path('app_commande') }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('valider_commande') }}">
+
+            <div class="mb-3">
+                <label for="nom">Nom</label>
+                <input type="text" class="form-control" name="nom" id="nom" required>
+            </div>
+            <div class="mb-3">
+                <label for="adresse">Adresse</label>
+                <input type="text" class="form-control" name="adresse" id="adresse" required>
+            </div>
+            <div class="mb-3">
+                <label for="rue">Rue</label>
+                <input type="text" class="form-control" name="rue" id="rue" required>
+            </div>
+            <div class="mb-3">
+                <label for="codePostal">Code Postal</label>
+                <input type="text" class="form-control" name="codePostal" id="codePostal" required>
+            </div>
+            <div class="mb-3">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" name="email" id="email" required>
+            </div>
+            <div class="mb-3">
+                <label for="telephone">Téléphone</label>
+                <input type="tel" class="form-control" name="telephone" id="telephone" required>
+            </div>
+
+            <h3>Mode de paiement</h3>
+            {% for mode, label in {
+                'CB': 'Carte Bancaire',
+                'PayPal': 'PayPal',
+                'Payement en Nature': 'Payement en Nature',
+                'Pas dargent': 'Pas dargent'
+            } %}
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="modePaiement" id="paiement{{ mode }}" value="{{ mode }}" {% if loop.first %}checked{% endif %}>
+                    <label class="form-check-label" for="paiement{{ mode }}">{{ label }}</label>
+                </div>
+            {% endfor %}
+
+            <h4>Résumé du panier :</h4>
+            <ul>
+                {% for produit in produitsPanier %}
+                    <li>{{ produit.nom }} x {{ produit.quantite }} – {{ produit.totalProduit|number_format(2, '.', ',') }} €</li>
+                {% endfor %}
+            </ul>
+
+            <h3>Total : {{ total|number_format(2, '.', ',') }} €</h3>
+
+            <button type="submit" class="btn btn-success mt-3">✅ Confirmer ma commande</button>
+        </form>
+
+        <a href="{{ path('app_panier') }}" class="btn btn-secondary mt-3">⬅️ Retour au panier</a>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,104 @@
+.navbar {
+  background-image: url("/asset/images/logo_quasbal.png");
+  background-size: cover; /* ou cover selon le rendu souhaité */
+  background-repeat: no-repeat;
+  background-position: center left; /* ou center, selon placement souhaité */
+}
+
+main {
+  padding: 20px;
+  margin-top: 80px;
+  text-align: center;
+}
+.card {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  text-align: center;
+  gap: 10px;
+  margin-bottom: 20px; /* Espace entre les cartes */
+  display: flex;
+  flex-direction: column; /* S'assurer que les éléments à l'intérieur sont bien alignés */
+  justify-content: space-between; /* Pour que le contenu à l'intérieur de la carte soit distribué uniformément */
+  height: 350px; /* Assure une hauteur uniforme */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card img {
+  height: 300px;
+  object-fit: cover; /* Pour que l'image ne se déforme pas mais remplisse l'espace */
+}
+
+.card:hover {
+  transform: translateY(-10px); /* Légère élévation */
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2); /* Ombre plus marquée */
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 30px; /* Espacement entre les lignes */
+}
+
+/* Utilisation de CSS Grid */
+.card-container {
+  display: grid;
+  gap: 20px; /* Espacement entre les cartes */
+  grid-template-columns: repeat(3, 1fr); /* 3 colonnes sur grands écrans */
+  align-items: stretch; /* Aligne les cartes pour qu'elles occupent toute la hauteur disponible */
+}
+
+/* Responsive pour tablettes (≤ 768px) */
+@media (max-width: 768px) {
+  .card-container {
+    grid-template-columns: repeat(2, 1fr); /* 2 colonnes */
+  }
+}
+
+/* Responsive pour mobiles (≤ 576px) */
+@media (max-width: 576px) {
+  .card-container {
+    grid-template-columns: 1fr; /* 1 colonne */
+  }
+
+  @media (max-width: 768px) {
+    .parallax-section {
+      background-attachment: scroll;
+    }
+  }
+}
+
+.social-icons {
+  height: 150px;
+  width: 200px;
+}
+.formulaire {
+  display: flex;
+  justify-content: center;
+}
+footer a {
+  color: red;
+}
+
+.parallax-section {
+  background-image: url("/images/principal/paralax.png");
+  height: 500px;
+  background-attachment: fixed; /* PARALLAXE ICI */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+form {
+  width: 75%;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #4df53e;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  opacity: 0.7;
+}
+
