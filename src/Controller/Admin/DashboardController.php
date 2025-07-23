@@ -53,9 +53,15 @@ public function configureMenuItems(): iterable
     yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
 
     yield MenuItem::section('Gestion');
-    yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-users', User::class);
-    yield MenuItem::linkToCrud('Plats', 'fas fa-box', Plat::class);
-    yield MenuItem::linkToCrud('Catégories', 'fas fa-tags', Categorie::class);
+
+    if ($this->isGranted('ROLE_ADMIN')) {
+        yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-users', User::class);    
+        yield MenuItem::linkToCrud('Plats', 'fas fa-box', Plat::class);
+        yield MenuItem::linkToCrud('Catégories', 'fas fa-tags', Categorie::class);
+    } elseif ($this->isGranted('ROLE_CHEF')) {
+        yield MenuItem::linkToCrud('Plats', 'fas fa-box', Plat::class);
+        yield MenuItem::linkToCrud('Catégories', 'fas fa-tags', Categorie::class);
+    }
 }
 
 }

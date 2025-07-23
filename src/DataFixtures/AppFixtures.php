@@ -82,6 +82,20 @@ class AppFixtures extends Fixture
             $manager->persist($user);
             $users[] = $user;
         }
+
+          // CHEF
+        $chef = new User();
+        $chef->setEmail("chef@example.com");
+        $chef->setNom("Chef");
+        $chef->setPrenom("Jean");
+        $chef->setAdresse("2 rue du Chef");
+        $chef->setCp("80001");
+        $chef->setVille("Amiens");
+        $chef->setTelephone("0600000001");
+        $chef->setRoles(['ROLE_CHEF']);
+        $chef->setPassword($this->hasher->hashPassword($chef, "chefpass"));
+        $manager->persist($chef);
+        $users[] = $chef;
  
 // Créer 3 commandes avec détails
 foreach (range(1, 3) as $i) {

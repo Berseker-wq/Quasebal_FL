@@ -3,16 +3,18 @@
 {% block title %}Commande confirmée{% endblock %}
 
 {% block body %}
-    <h2 class="mt-4 mb-4">Merci pour votre commande !</h2>
+<div class="container py-5">
+  <h2 class="mb-4">🎉 Merci pour votre commande !</h2>
 
-    <p><strong>Nom :</strong> {{ nom }}</p>
-    <p><strong>Adresse :</strong> {{ adresse }}</p>
-    <p><strong>Email :</strong> {{ email }}</p>
-    <p><strong>Téléphone :</strong> {{ telephone }}</p>
+  <p><strong>Nom :</strong> {{ nom }}</p>
+  <p><strong>Adresse :</strong> {{ adresse }}</p>
+  <p><strong>Email :</strong> {{ email }}</p>
+  <p><strong>Téléphone :</strong> {{ telephone }}</p>
 
-    <div class="alert alert-success mt-4">
-        🎉 Votre commande a bien été enregistrée. Vous recevrez un email de confirmation.
-    </div>
+  <div class="alert alert-success mt-4">
+    Votre commande a bien été enregistrée. Vous recevrez un email de confirmation.
+  </div>
 
-    <a href="{{ path('app_catalogue_plats') }}" class="btn btn-primary mt-3">🔙 Retour au catalogue</a>
+  <a href="{{ path('app_catalogue_plats') }}" class="btn btn-primary mt-3">🔙 Retour au catalogue</a>
+</div>
 {% endblock %}

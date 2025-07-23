@@ -25,7 +25,7 @@
     {% else %}
         <form method="post" action="{{ path('app_commande') }}">
             <input type="hidden" name="_token" value="{{ csrf_token('valider_commande') }}">
-
+            <h3>Adresse de livraison</h3>
             <div class="mb-3">
                 <label for="nom">Nom</label>
                 <input type="text" class="form-control" name="nom" id="nom" required>
@@ -50,7 +50,24 @@
                 <label for="telephone">Téléphone</label>
                 <input type="tel" class="form-control" name="telephone" id="telephone" required>
             </div>
-
+            <h3>Adresse de facturation</h3>
+            <div class="mb-3">
+                <label for="nomFacturation">Nom</label>
+                <input type="text" class="form-control" name="nomFacturation" id="nomFacturation" required>
+            </div>
+            <div class="mb-3">
+                <label for="adresseFacturation">Adresse</label>
+                <input type="text" class="form-control" name="adresseFacturation" id="adresseFacturation" required>
+            </div>
+            <div class="mb-3">
+                <label for="rueFacturation">Rue</label>
+                <input type="text" class="form-control" name="rueFacturation" id="rueFacturation" required>
+            </div>
+            <div class="mb-3">
+                <label for="codePostalFacturation">Code Postal</label>
+                <input type="text" class="form-control" name="codePostalFacturation" id="codePostalFacturation" required>
+            </div>
+            <div class="mb-3">
             <h3>Mode de paiement</h3>
             {% for mode, label in {
                 'CB': 'Carte Bancaire',
@@ -72,6 +89,14 @@
             </ul>
 
             <h3>Total : {{ total|number_format(2, '.', ',') }} €</h3>
+
+            <div class="form-check mt-3">
+    <input class="form-check-input" type="checkbox" name="accepter_cgu" id="accepter_cgu" required>
+    <label class="form-check-label" for="accepter_cgu">
+        J'accepte les <a href="{{ path('app_panier') }}" target="_blank">Conditions Générales d'Utilisation</a>.
+    </label>
+</div>
+
 
             <button type="submit" class="btn btn-success mt-3">✅ Confirmer ma commande</button>
         </form>

@@ -5,6 +5,16 @@
 
 
 {% block body %}
+{% if videoExists %}
+    <video width="100%" controls autoplay muted loop poster="{{ asset('asset/images/video_poster.jpg') }}">
+        <source src="{{ asset('asset/video/Cuisine_C.mp4') }}" type="video/mp4">
+        Votre navigateur ne supporte pas la vidéo.
+    </video>
+{% else %}
+    <p>La vidéo n’est pas disponible pour le moment.</p>
+{% endif %}
+
+
 <h1>Menu du jour</h1>
    <div class="row row-cols-1 row-cols-md-3 g-4">
         {% for plat in plats %}

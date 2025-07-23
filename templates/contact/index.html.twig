@@ -2,36 +2,53 @@
 
 {% block title %}Contact{% endblock %}
 
-
 {% block body %}
+<section>
+    <div class="formulaire container">
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success mt-3">{{ message }}</div>
+        {% endfor %}
 
-<div class="example-wrapper">
-    <h1>Contact</h1>
-    <form action="{{ path('app_contact') }}" method="post">
-        <div class="mb-3">
-            <label for="nom" class="form-label">Nom</label>
-            <input type="text" class="form-control" id="nom" name="nom" required>
-        </div>
-        <div class="mb-3">
-            <label for="prenom" class="form-label">Prénom</label>
-            <input type="text" class="form-control" id="prenom" name="prenom" required>
-        </div>
-        <div class="mb-3">
-            <label for="telephone" class="form-label">Téléphone</label>
-            <input type="number" class="form-control" id="telephone" name="telephone" required>
-        </div>
-        <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="email" name="email" required>
-        </div>
-        <div class="mb-3">
-            <label for="message" class="form-label">Message</label>
-            <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
-        </div>
-        <button type="submit" class="btn btn-warning rounded-pill d-flex align-items-center gap-2 px-4 shadow-sm">
-    <img src="{{ asset('asset/images/luffy_gear5.png') }}" alt="Skull" width="24" height="24">
-    <span>Contact nous serieux !!! Incapable</span>
-</button>
-    </form>
-</div>
+        <form action="{{ path('app_contact') }}" method="post">
+            <div class="row mb-3">
+                <div class="col fw-bold mt-3">
+                    <label for="nom">NOM</label>
+                    <input type="text" class="form-control" id="nom" name="nom" required />
+                    <div class="col text-danger" id="erreurNom">
+                    </div>
+                </div>
+                <div class="col fw-bold mt-3">
+                    <label for="prenom">PRENOM</label>
+                    <input type="text" class="form-control" id="prenom" name="prenom" required />
+                    <div class="col text-danger" id="erreurPrenom">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col fw-bold mt-3">
+                    <label for="email">EMAIL</label>
+                    <input type="email" class="form-control" id="email" name="email" required />
+                    <div class="col text-danger" id="erreurEmail">
+                    </div>
+                </div>
+                <div class="col fw-bold mt-3">
+                    <label for="telephone">TELEPHONE</label>
+                    <input type="text" class="form-control" id="telephone" name="telephone" required />
+                    <div class="col text-danger" id="erreurTelephone">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group fw-bold mt-4">
+                <label for="message">VOTRE DEMANDE</label>
+                <textarea class="form-control" id="message" name="message" rows="3" required></textarea>
+                <div class="col text-danger" id="erreurDemande">
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-warning rounded-pill d-flex align-items-center gap-2 px-4 shadow-sm mt-5 float-end">
+                <span>Envoie ta demande !!</span>
+            </button>
+        </form>
+    </div>
+</section>
 {% endblock %}

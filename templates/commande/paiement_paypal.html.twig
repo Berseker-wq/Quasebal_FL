@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Paiement PayPal{% endblock %}
+
+{% block body %}
+<h1>Paiement PayPal</h1>
+
+<p>Simulation du paiement PayPal.</p>
+
+<form method="post" action="{{ path('app_paiement_paypal') }}">
+    <button type="submit" class="btn btn-primary">Payer avec PayPal</button>
+</form>
+{% endblock %}

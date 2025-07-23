@@ -16,6 +16,9 @@
     <!-- Feuille de style personnalisée -->
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
 
+      {# Intégration du script Stripe dans le <head> ou en fin de <body> #}
+    <script src="https://js.stripe.com/v3/"></script>
+
     {% block stylesheets %}{% endblock %}
 </head>
 <body>
@@ -43,7 +46,33 @@
               <li class="nav-item">
               <a class="nav-link" href="{{ path('app_registration') }}">Inscription</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ path('app_panier') }}">Panier</a>
           </ul>
+         {% if app.user %}
+          <li><a href="{{ path('app_commande') }}">Commande</a></li>
+            {% endif %}
+
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            {% if app.user %}
+              <p role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  {{ app.user.prenom }} {{ app.user.nom }}
+                </p>
+                <ul>
+                  {% if is_granted('ROLE_ADMIN') %}
+                    <li><a class="dropdown-item" href="{{ path('admin') }}">Admin Dashboard</a></li>
+                  {% endif %}
+                  {% if is_granted('ROLE_CHEF') %}
+                    <li><a class="dropdown-item" href="{{ path('admin') }}">Chef Dashboard</a></li>
+                  {% endif %}
+                  <li><a class="dropdown-item" href="{{ path('app_logout') }}">Déconnexion</a></li>
+                </ul>
+              </li>
+            {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
+              </li>
+            {% endif %}
           <form class="d-flex" role="search">
             <input class="form-control me-2" type="search" placeholder="Recherche" aria-label="Search">
             <button class="btn btn-outline-success" type="submit">Rechercher</button>
@@ -92,6 +121,8 @@
             crossorigin="anonymous"></script>
           
           <script src="{{ asset('assets/app.js') }}"></script>
+
+            <script src="https://js.stripe.com/v3/"></script>
 
 
 

@@ -8,6 +8,7 @@ use App\Repository\CategorieRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Filesystem\Filesystem;
 
 final class CatalogueController extends AbstractController
 {
@@ -19,9 +20,24 @@ public function index(CategorieRepository $categorieRepository, PlatRepository $
     // On récupère les plats actifs (menu du jour)
     $plats = $platRepository->findBy(['active' => true]);
 
+  // 1. Répertoire public
+    $publicDirPath = $this->getParameter('kernel.project_dir') . '/public';
+
+    // 2. Chemin relatif du fichier vidéo
+    $videoRelativePath = 'asset/video/Cuisine_gastro.mp4';
+
+    // 3. Chemin absolu complet
+    $videoFullPath = $publicDirPath . '/' . $videoRelativePath;
+
+    // 4. Vérification d’existence
+    $filesystem = new Filesystem();
+    $videoExists = $filesystem->exists($videoFullPath);
+
+
     return $this->render('catalogue/index.html.twig', [
         'categories' => $categories,
         'plats' => $plats,
+        'videoExists' => $videoExists,
     ]);
 }
 
@@ -55,4 +71,5 @@ public function index(CategorieRepository $categorieRepository, PlatRepository $
             'categories' => $categories,
         ]);
     }
+    
 }

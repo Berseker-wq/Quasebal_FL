@@ -10,10 +10,12 @@ class PanierService
     private SessionInterface $session;
 
     private array $produits = [
-        15 => ['nom' => 'Vin Blanc', 'prix' => 4.15, 'image' => 'images/produit_a.jpg'],
-        13 => ['nom' => 'Pizza Margaritha', 'prix' => 12, 'image' => 'images/produit_b.jpg'],
-        14 => ['nom' => 'Sangria', 'prix' => 5.65,  'image' => 'uploads/images/plats/sangria-maison-1752652711.jpg'],
-        11 => ['nom' => 'Pizza Vege', 'prix' => 14.5,  'image' => 'images/produit_d.jpg'],
+        25 => ['nom' => 'Sushi', 'prix' => 11, 'image' => 'images/produit_a.jpg'],
+        26 => ['nom' => 'Gyoza', 'prix' => 9, 'image' => 'images/produit_b.jpg'],
+        27 => ['nom' => 'Vin Blanc', 'prix' => 2.30, 'image' => 'images/produit_c.jpg'],
+        28 => ['nom' => 'Tajine', 'prix' => 13, 'image' => 'images/produit_d.jpg'],
+        29 => ['nom' => 'Millefeuille de champignions duxelles', 'prix' => 22.75, 'image' => 'images/produit_e.jpg'],
+        30 => ['nom' => 'Chevreuil en sauce sur armure blanche', 'prix' => 32, 'image' => 'images/produit_f.jpg'],
     ];
 
     public function __construct(RequestStack $requestStack)
@@ -72,4 +74,20 @@ class PanierService
         }
         return $total;
     }
+
+    public function decrease(int $id): void
+{
+    $panier = $this->session->get('panier', []);
+
+    if (!empty($panier[$id])) {
+        if ($panier[$id] > 1) {
+            $panier[$id]--;
+        } else {
+            unset($panier[$id]); // Supprime si la quantité tombe à 0
+        }
+    }
+
+    $this->session->set('panier', $panier);
+}
+
 }

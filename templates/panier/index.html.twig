@@ -37,6 +37,7 @@
                         <td>{{ produit.totalProduit|number_format(2, '.', ',') }} €</td>
                         <td>
                             <a href="{{ path('app_panier_ajouter', { id: produit.id }) }}" class="btn btn-sm btn-outline-primary" title="Ajouter 1">➕</a>
+                            <a href="{{ path('app_panier_retirer', { id: produit.id }) }}" class="btn btn-sm btn-outline-secondary" title="Retirer 1">➖</a>
                             
                             <a href="{{ path('app_panier_supprimer', {id: produit.id}) }}" class="btn btn-sm btn-outline-danger" title="Supprimer l'article">🗑</a>
                         </td>
