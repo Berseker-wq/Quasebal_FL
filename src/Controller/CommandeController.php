@@ -14,6 +14,7 @@ use App\Service\PanierService;
 use Stripe\Stripe;
 use Stripe\Charge;
 
+
 class CommandeController extends AbstractController
 {
     #[Route('/commande', name: 'app_commande', methods: ['GET', 'POST'])]
@@ -149,6 +150,20 @@ public function confirmation(Request $request, MailerInterface $mailer): Respons
     if (!$commandeData) {
         return $this->redirectToRoute('app_commande');
     }
+     // Enregistrement dans l'historique
+    $historique = $session->get('historique_commandes', []);
+    $historique[] = [
+        'date' => (new \DateTime())->format('Y-m-d H:i:s'),
+        'nom' => $commandeData['nom'],
+        'adresse' => $commandeData['adresse'],
+        'email' => $commandeData['email'],
+        'telephone' => $commandeData['telephone'],
+        'total' => $commandeData['total'],
+        'produitsPanier' => $commandeData['produitsPanier'],
+        'modePaiement' => $commandeData['modePaiement'],
+    ];
+    $session->set('historique_commandes', $historique);
+
 
     // Envoi de l'email de confirmation (une seule fois)
     $this->envoyerEmailConfirmation($commandeData, $mailer);
@@ -186,4 +201,16 @@ private function envoyerEmailConfirmation(array $commandeData, MailerInterface $
         
     $mailer->send($email);
 }
+#[Route('/commande/historique', name: 'app_commande_historique', methods: ['GET'])]
+#[IsGranted('ROLE_USER')]
+public function historique(Request $request): Response
+{
+    $session = $request->getSession();
+    $historique = $session->get('historique_commandes', []);
+
+    return $this->render('commande/historique.html.twig', [
+        'historique' => $historique,
+    ]);
+}
+
 }

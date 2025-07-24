@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\PanierService;
+
 
 class PanierController extends AbstractController
 {
@@ -15,6 +17,8 @@ class PanierController extends AbstractController
         return $this->render('panier/index.html.twig', [
             'produitsPanier' => $panierService->getProduitsPanier(),
             'total' => $panierService->getTotal(),
+            'reduction' => $panierService->getReduction(),           // Ajouté
+        'totalAvecReduction' => $panierService->getTotalAvecReduction(),  // Ajouté
         ]);
     }
 
@@ -52,17 +56,32 @@ public function valider(PanierService $panierService): Response
         'total' => $panierService->getTotal(),
     ]);
 }
-
-    #[Route('/panier/retirer/{id}', name: 'app_panier_retirer')]
-    public function retirer(int $id, PanierService $panierService): Response
-    {
-        if (!$panierService->produitExiste($id)) {
-            $this->addFlash('error', 'Produit introuvable');
-        } else {
-            $panierService->remove($id);
-            $this->addFlash('success', 'Produit retiré du panier');
-        }
-
-        return $this->redirectToRoute('app_panier');
+// Suppression d'une quantité d'un article 
+   #[Route('/panier/retirer/{id}', name: 'app_panier_retirer')]
+public function retirer(int $id, PanierService $panierService): Response
+{
+    if (!$panierService->produitExiste($id)) {
+        $this->addFlash('error', 'Produit introuvable');
+    } else {
+        $panierService->decrease($id);
+        $this->addFlash('success', 'Quantité diminuée');
     }
+
+    return $this->redirectToRoute('app_panier');
+}
+#[Route('/panier/code', name: 'panier_code', methods: ['POST'])]
+public function appliquerCode(Request $request, PanierService $panierService): Response
+{
+    $code = $request->request->get('code');
+    if ($panierService->appliquerCodePromo($code)) {
+        $this->addFlash('success', 'Code promo appliqué !');
+    } else {
+        $this->addFlash('error', 'Code promo invalide.');
+    }
+
+    return $this->redirectToRoute('app_panier');  // La méthode index() renverra toutes les données nécessaires
+}
+
+
+
 }

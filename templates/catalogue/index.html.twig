@@ -7,7 +7,7 @@
 {% block body %}
 {% if videoExists %}
     <video width="100%" controls autoplay muted loop poster="{{ asset('asset/images/video_poster.jpg') }}">
-        <source src="{{ asset('asset/video/Cuisine_C.mp4') }}" type="video/mp4">
+        <source src="{{ asset('asset/video/Cuisine_C.mp4') }}" type="video/mp4" height="50px" width="50px">
         Votre navigateur ne supporte pas la vidéo.
     </video>
 {% else %}

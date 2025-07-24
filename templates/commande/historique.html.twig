@@ -1,0 +1,25 @@
+<h1>Historique des commandes</h1>
+
+{% if historique is empty %}
+    <p>Aucune commande passée.</p>
+{% else %}
+    <ul>
+        {% for commande in historique %}
+            <li>
+                <strong>Date :</strong> {{ commande.date }}<br>
+                <strong>Nom :</strong> {{ commande.nom }}<br>
+                <strong>Adresse :</strong> {{ commande.adresse }}<br>
+                <strong>Email :</strong> {{ commande.email }}<br>
+                <strong>Téléphone :</strong> {{ commande.telephone }}<br>
+                <strong>Total :</strong> {{ commande.total }} €<br>
+                <strong>Mode de paiement :</strong> {{ commande.modePaiement }}<br>
+                <strong>Produits :</strong>
+                <ul>
+                    {% for produit in commande.produitsPanier %}
+                        <li>{{ produit.nom }} x{{ produit.quantite }} - {{ produit.prix }} €</li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}

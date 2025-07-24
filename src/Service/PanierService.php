@@ -12,10 +12,11 @@ class PanierService
     private array $produits = [
         25 => ['nom' => 'Sushi', 'prix' => 11, 'image' => 'images/produit_a.jpg'],
         26 => ['nom' => 'Gyoza', 'prix' => 9, 'image' => 'images/produit_b.jpg'],
-        27 => ['nom' => 'Vin Blanc', 'prix' => 2.30, 'image' => 'images/produit_c.jpg'],
+        27 => ['nom' => 'Vin Blanc', 'prix' => 3, 'image' => 'images/produit_c.jpg'],
         28 => ['nom' => 'Tajine', 'prix' => 13, 'image' => 'images/produit_d.jpg'],
-        29 => ['nom' => 'Millefeuille de champignions duxelles', 'prix' => 22.75, 'image' => 'images/produit_e.jpg'],
-        30 => ['nom' => 'Chevreuil en sauce sur armure blanche', 'prix' => 32, 'image' => 'images/produit_f.jpg'],
+        29 => ['nom' => 'Millefeuille de champignions duxelles', 'prix' => 25, 'image' => 'images/produit_e.jpg'],
+        30 => ['nom' => 'Chevreuil en sauce sur armure blanche', 'prix' => 35, 'image' => 'images/produit_f.jpg'],
+        31 => ['nom' => 'Chevreuil en sauce sur armure blanche', 'prix' => 6, 'image' => 'images/produit_g.jpg'],
     ];
 
     public function __construct(RequestStack $requestStack)
@@ -88,6 +89,48 @@ class PanierService
     }
 
     $this->session->set('panier', $panier);
+}
+// Liste des codes promo possibles
+private array $codesPromo = [
+    'WELCOME10' => 10, // 10% de réduction
+    'FREESHIP' => 40,   // Seulement Bastien, Elisa, Safae, Lylou , Louca... aura acces a ce code les autres debrouillez vous 
+    'ANAIS2002' =>47, // Seulement Anais
+];
+
+// Appliquer un code promo
+public function appliquerCodePromo(string $code): bool
+{
+    if (!isset($this->codesPromo[$code])) {
+        return false;
+    }
+
+    $this->session->set('code_promo', $code);
+    return true;
+}
+
+// Supprimer le code promo
+public function retirerCodePromo(): void
+{
+    $this->session->remove('code_promo');
+}
+
+// Récupérer la valeur de la réduction
+public function getReduction(): float
+{
+    $code = $this->session->get('code_promo');
+    $reduction = 0;
+
+    if ($code && isset($this->codesPromo[$code])) {
+        $reduction = ($this->getTotal() * $this->codesPromo[$code]) / 100;
+    }
+
+    return $reduction;
+}
+
+// Total après réduction
+public function getTotalAvecReduction(): float
+{
+    return max(0, $this->getTotal() - $this->getReduction());
 }
 
 }

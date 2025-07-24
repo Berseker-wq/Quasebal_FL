@@ -9,6 +9,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 
 class UserCrudController extends AbstractCrudController
 {
@@ -44,6 +47,11 @@ class UserCrudController extends AbstractCrudController
             TextField::new('adresse', 'Adresse')->setRequired(false),
             TextField::new('cp', 'Code Postal')->setRequired(false),
             TextField::new('ville', 'Ville')->setRequired(false),
+                ImageField::new('image')
+                ->setBasePath('uploads/images')
+                ->setUploadDir('public/uploads/images')
+                ->setUploadedFileNamePattern('[slug]-[timestamp].[extension]')
+                ->setRequired(false),
         ];
 
         // Affiche le champ mot de passe uniquement à la création

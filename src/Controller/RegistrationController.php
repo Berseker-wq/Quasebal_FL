@@ -8,7 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route; // Utilise Annotation pour Route
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -26,21 +26,24 @@ final class RegistrationController extends AbstractController
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
-        // Si le formulaire est soumis et valide
         if ($form->isSubmitted() && $form->isValid()) {
             // Hash du mot de passe
             $plainPassword = $form->get('plainPassword')->getData();
             $hashedPassword = $hasher->hashPassword($user, $plainPassword);
             $user->setPassword($hashedPassword);
 
-            // Enregistrement en base de données
+            // IMPORTANT : Si tu utilises VichUploaderBundle, 
+            // il faut forcer la mise à jour de l'entité pour détecter le fichier uploadé
+            // Par exemple, si tu as un champ updatedAt, tu dois le mettre à jour ici
+            // $user->setUpdatedAt(new \DateTime());
+
             $em->persist($user);
             $em->flush();
 
             // Envoi de l'email via template Twig
             $email = (new TemplatedEmail())
                 ->from('ton.email@tondomaine.com')
-                ->to('test@example.com') // Adresse captée par MailHog
+                ->to($user->getEmail()) // Envoie à l'utilisateur inscrit (tu peux adapter)
                 ->subject('Nouvelle inscription utilisateur')
                 ->htmlTemplate('email/index.html.twig')
                 ->context([
@@ -53,7 +56,6 @@ final class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        // Affichage du formulaire d'inscription
         return $this->render('registration/index.html.twig', [
             'registrationForm' => $form->createView(),
         ]);

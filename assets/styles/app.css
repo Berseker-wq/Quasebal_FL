@@ -1,5 +1,4 @@
 .navbar {
-  background-image: url("/asset/images/logo_quasbal.png");
   background-size: cover; /* ou cover selon le rendu souhaité */
   background-repeat: no-repeat;
   background-position: center left; /* ou center, selon placement souhaité */
@@ -89,7 +88,6 @@ footer a {
 }
 
 .parallax-section {
-  background-image: url("/images/principal/paralax.png");
   height: 500px;
   background-attachment: fixed; /* PARALLAXE ICI */
   background-position: center;
@@ -109,3 +107,26 @@ form {
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   opacity: 0.7;
 }
+
+/* Mode sombre */
+body.dark-mode {
+  background-color: #121212;
+  color: #eee;
+}
+
+body.dark-mode .navbar {
+  background-color: #222 !important;
+}
+
+body.dark-mode footer {
+  background-color: #222;
+  color: #ddd;
+}
+
+body.dark-mode .form-control,
+body.dark-mode .btn {
+  background-color: #333;
+  color: #fff;
+  border-color: #555;
+}
+

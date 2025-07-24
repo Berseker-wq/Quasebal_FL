@@ -8,8 +8,12 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\HttpFoundation\File\File;
+
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[Vich\Uploadable]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -50,6 +54,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 50)]
     private ?string $ville = null;
+
+      #[ORM\Column(length: 50, nullable: true)]
+private ?string $image = null;
+
+
+     // Fichier temporaire (non stocké en base)
+    #[Vich\UploadableField(mapping: 'user_image', fileNameProperty: 'image')]
+    private ?File $imageFile = null;
 
     /**
      * @var Collection<int, Commande>
@@ -247,5 +259,24 @@ public function setPlainPassword(?string $plainPassword): self
     $this->plainPassword = $plainPassword;
 
     return $this;
+}
+ public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(string $image): static
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+    public function getImageFile(): ?File
+{
+    return $this->imageFile;
+}
+public function setImageFile(?File $imageFile = null): void
+{
+    $this->imageFile = $imageFile;
 }
 }

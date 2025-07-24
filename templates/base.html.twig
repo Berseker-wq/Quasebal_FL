@@ -6,25 +6,23 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
 
     <!-- Feuille de style Bootstrap -->
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-        crossorigin="anonymous"
-    />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
     <!-- Feuille de style personnalisée -->
-    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+   <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
 
-      {# Intégration du script Stripe dans le <head> ou en fin de <body> #}
-    <script src="https://js.stripe.com/v3/"></script>
+
 
     {% block stylesheets %}{% endblock %}
+           {{ encore_entry_link_tags('app') }} 
 </head>
 <body>
 
     {# NAVBAR - Commun à toutes les pages #}
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <nav class="navbar navbar-expand-lg bg-body-tertiary" style="background-image: url('../asset/images/logo_quasbal.png');">
+
+
+
       <div class="container-fluid">
       <a class="navbar-brand" href="{{ path('app_catalogue') }}">Quasebal</a>
      <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -56,7 +54,14 @@
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
             {% if app.user %}
               <p role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  {{ app.user.prenom }} {{ app.user.nom }}
+                  {{ app.user.prenom }} {{ app.user.nom }} 
+               {% if app.user.image %}
+    <img src="{{ asset('uploads/images/' ~ app.user.image) }}" alt="Photo de profil" width="90" height="90" class="rounded-circle">
+{% else %}
+    <img src="{{ asset('images/default-avatar.png') }}" alt="Par défaut" width="90" height="90" class="rounded-circle">
+{% endif %}
+
+
                 </p>
                 <ul>
                   {% if is_granted('ROLE_ADMIN') %}
@@ -68,11 +73,11 @@
                   <li><a class="dropdown-item" href="{{ path('app_logout') }}">Déconnexion</a></li>
                 </ul>
               </li>
-            {% else %}
-              <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
-              </li>
-            {% endif %}
+  {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
+          </li>
+        {% endif %}
           <form class="d-flex" role="search">
             <input class="form-control me-2" type="search" placeholder="Recherche" aria-label="Search">
             <button class="btn btn-outline-success" type="submit">Rechercher</button>
@@ -80,7 +85,10 @@
         </div>
       </div>
     </nav>
-
+ 
+<button id="toggle-theme" class="btn btn-outline-secondary ms-3">
+  🌙 / ☀️ 
+</button>
 
 
 
@@ -104,7 +112,8 @@
         <img src="{{ asset('images/principal/Insta_Qasebal.png') }}" alt="Instagram" width="50" height="40">
       </a>
       <a href="https://www.facebook.com/?locale=fr_FR" target="_blank">
-        <img src="{{ asset('images/principal/facebook_quasebal.png') }}" alt="Facebook" width="50" height="40">
+        <img src="{{ asset('build/images/principal/facebook_quasebal.png') }}" alt="Facebook">
+height="40">
       </a>
       <br>
       <p>Quasebal@gmail.com</p>
@@ -122,11 +131,11 @@
           
           <script src="{{ asset('assets/app.js') }}"></script>
 
-            <script src="https://js.stripe.com/v3/"></script>
 
 
 
     {% block javascripts %}
+           {{ encore_entry_script_tags('app') }} 
     {% block importmap %}{{ importmap('app') }}{% endblock %}
     {% endblock %}
 </body>

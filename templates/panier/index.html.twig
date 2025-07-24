@@ -3,52 +3,104 @@
 {% block title %}Panier{% endblock %}
 
 {% block body %}
-    <h1>Mon Panier</h1>
+<style>
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
-    {# Affichage des messages flash #}
-    {% for message in app.flashes('success') %}
-        <div class="alert alert-success">{{ message }}</div>
-    {% endfor %}
-    {% for message in app.flashes('error') %}
-        <div class="alert alert-danger">{{ message }}</div>
-    {% endfor %}
+thead {
+    background-color: #007bff;
+    color: white;
+}
 
-    {% if produitsPanier is empty %}
-        <p>Votre panier est vide.</p>
-    {% else %}
-        <table>
-            <thead>
+th, td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tbody tr:hover {
+    background-color: #f1f1f1;
+}
+.code-promo-form {
+        margin: 30px 0;
+        display: flex;
+        gap: 10px;
+        max-width: 400px;
+    }
+
+    .totaux {
+        margin-top: 30px;
+        font-size: 1.1em;
+    }
+
+    .totaux p, .totaux h3 {
+        margin-bottom: 5px;
+    }
+</style>
+   <h1>🛒 Mon Panier</h1>
+
+{# Messages flash #}
+{% for message in app.flashes('success') %}
+    <div class="alert alert-success">{{ message }}</div>
+{% endfor %}
+{% for message in app.flashes('error') %}
+    <div class="alert alert-danger">{{ message }}</div>
+{% endfor %}
+
+{% if produitsPanier is empty %}
+    <p>Votre panier est vide.</p>
+{% else %}
+    <table>
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Nom</th>
+                <th>Prix unitaire</th>
+                <th>Quantité</th>
+                <th>Total</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for produit in produitsPanier %}
                 <tr>
-                    <th>Image</th>
-                    <th>Nom</th>
-                    <th>Prix unitaire</th>
-                    <th>Quantité</th>
-                    <th>Total</th>
-                    <th>Action</th>
+                    <td><img src="{{ asset(produit.image) }}" alt="{{ produit.nom }}" width="50"></td>
+                    <td>{{ produit.nom }}</td>
+                    <td>{{ produit.prix|number_format(2, '.', ',') }} €</td>
+                    <td>{{ produit.quantite }}</td>
+                    <td>{{ produit.totalProduit|number_format(2, '.', ',') }} €</td>
+                    <td>
+                        <a href="{{ path('app_panier_ajouter', { id: produit.id }) }}" class="btn btn-sm btn-outline-primary" title="Ajouter 1">➕</a>
+                        <a href="{{ path('app_panier_retirer', { id: produit.id }) }}" class="btn btn-sm btn-outline-secondary" title="Retirer 1">➖</a>
+                        <a href="{{ path('app_panier_supprimer', { id: produit.id }) }}" class="btn btn-sm btn-outline-danger" title="Supprimer">🗑</a>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                {% for produit in produitsPanier %}
-                    <tr>
-                        <td><img src="{{ asset(produit.image) }}" alt="{{ produit.nom }}" width="50"></td>
-                        <td>{{ produit.nom }}</td>
-                        <td>{{ produit.prix|number_format(2, '.', ',') }} €</td>
-                        <td>{{ produit.quantite }}</td>
-                        <td>{{ produit.totalProduit|number_format(2, '.', ',') }} €</td>
-                        <td>
-                            <a href="{{ path('app_panier_ajouter', { id: produit.id }) }}" class="btn btn-sm btn-outline-primary" title="Ajouter 1">➕</a>
-                            <a href="{{ path('app_panier_retirer', { id: produit.id }) }}" class="btn btn-sm btn-outline-secondary" title="Retirer 1">➖</a>
-                            
-                            <a href="{{ path('app_panier_supprimer', {id: produit.id}) }}" class="btn btn-sm btn-outline-danger" title="Supprimer l'article">🗑</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+            {% endfor %}
+        </tbody>
+    </table>
 
-        <h3>Total : {{ total|number_format(2, '.', ',') }} €</h3>
+    {# Formulaire de code promo #}
+    <form method="post" action="{{ path('panier_code') }}" class="code-promo-form">
+        <input type="text" name="code" class="form-control" placeholder="Code promo" required>
+        <button type="submit" class="btn btn-primary">Appliquer</button>
+    </form>
 
-<a href="{{ path('app_panier_valider') }}" class="btn btn-success mt-3">✅ Valider le panier</a>
+    {# Totaux #}
+    <div class="totaux">
+        <p><strong>Total avant réduction :</strong> {{ total|number_format(2, '.', ',') }} €</p>
+      <p><strong>Réduction :</strong> -{{ (reduction|default(0))|number_format(2, '.', ',') }} €</p>
+<h3><strong>Total à payer :</strong> {{ (totalAvecReduction|default(total))|number_format(2, '.', ',') }} €</h3>
+    </div>
 
-    {% endif %}
+    <a href="{{ path('app_panier_valider') }}" class="btn btn-success mt-4">✅ Valider le panier</a>
+{% endif %}
 {% endblock %}
+
