@@ -38,14 +38,23 @@
 
     <hr class="my-5">
 
-    <h2>Catégories</h2>
-    <ul class="list-group">
-        {% for categorie in categories %}
-            <li class="list-group-item">
-                <a href="{{ path('app_catalogue_categorie_plats', { id: categorie.id }) }}">{{ categorie.libelle }}</a>
-            </li>
-        {% endfor %}
-    </ul>
-
+  <h2>Catégories</h2>
+<div class="row row-cols-1 row-cols-md-4 g-4">
+    {% for categorie in categories %}
+        <div class="col">
+            <a href="{{ path('app_catalogue_categorie_plats', { id: categorie.id }) }}" class="text-decoration-none text-dark">
+                <div class="card h-100">
+                    {% if categorie.image %}
+                        <img src="{{ asset('uploads/images/' ~ categorie.image) }}" class="card-img-top" alt="{{ categorie.libelle }}">
+                    {% else %}
+                        <img src="{{ asset('images/default-category.jpg') }}" class="card-img-top" alt="Image par défaut">
+                    {% endif %}
+                    <div class="card-body text-center">
+                        <h5 class="card-title">{{ categorie.libelle }}</h5>
+                    </div>
+                </div>
+            </a>
+        </div>
+    {% endfor %}
 </div>
 {% endblock %}

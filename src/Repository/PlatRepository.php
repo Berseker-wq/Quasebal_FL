@@ -15,6 +15,14 @@ class PlatRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Plat::class);
     }
+       public function searchByKeyword(string $keyword): array
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.libelle LIKE :kw')
+            ->setParameter('kw', '%' . $keyword . '%')
+            ->getQuery()
+            ->getResult();
+    }
 
 //    /**
 //     * @return Plat[] Returns an array of Plat objects

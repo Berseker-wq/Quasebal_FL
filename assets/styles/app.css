@@ -108,25 +108,54 @@ form {
   opacity: 0.7;
 }
 
-/* Mode sombre */
-body.dark-mode {
+/* Thème clair (par défaut) */
+body.light-theme {
+  background-color: white;
+  color: black;
+}
+
+/* Thème sombre */
+body.dark-theme {
   background-color: #121212;
-  color: #eee;
+  color: #e0e0e0;
 }
 
-body.dark-mode .navbar {
-  background-color: #222 !important;
+/* Thème sépia */
+body.sepia-theme {
+  background-color: #f4ecd8;
+  color: #5b4636;
 }
 
-body.dark-mode footer {
-  background-color: #222;
-  color: #ddd;
+/* Thème bleu */
+body.blue-theme {
+  background-color: #e7f0ff;
+  color: #001f3f;
+}
+body.onepiece-theme {
+  background-color: #fff8e7;
+  color: #000;
+  font-family: 'Treasure Map Deadhand', sans-serif; /* Si tu veux une font pirate */
+  background-image: url('/images/onepiece/background-map.jpg');
+  background-size: cover;
+  background-attachment: fixed;
 }
 
-body.dark-mode .form-control,
-body.dark-mode .btn {
-  background-color: #333;
+body.onepiece-theme .navbar {
+  background-color: #ffd700 !important; /* Jaune or Mugiwara */
+  border-bottom: 4px solid #e60012;     /* Rouge intense */
+}
+
+body.onepiece-theme .btn {
+  background-color: #e60012;
   color: #fff;
-  border-color: #555;
+  border: none;
 }
 
+body.onepiece-theme a {
+  color: #0b3d91;
+}
+
+body.onepiece-theme footer {
+  background-color: #0b3d91;
+  color: #fff;
+}

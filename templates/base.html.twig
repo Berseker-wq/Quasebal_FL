@@ -78,17 +78,23 @@
             <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
           </li>
         {% endif %}
-          <form class="d-flex" role="search">
-            <input class="form-control me-2" type="search" placeholder="Recherche" aria-label="Search">
-            <button class="btn btn-outline-success" type="submit">Rechercher</button>
-          </form>
+         <form class="d-flex" method="get" action="{{ path('app_catalogue_plats') }}">
+  <input class="form-control me-2" type="search" name="q" placeholder="Recherche..." value="{{ app.request.get('q') }}">
+  <button class="btn btn-outline-success" type="submit">Rechercher</button>
+</form>
+
         </div>
       </div>
     </nav>
  
-<button id="toggle-theme" class="btn btn-outline-secondary ms-3">
-  🌙 / ☀️ 
-</button>
+<select id="theme-selector" class="form-select w-auto ms-3">
+  <option value="light-theme">☀️ Clair</option>
+  <option value="dark-theme">🌙 Sombre</option>
+  <option value="sepia-theme">📜 Sépia</option>
+  <option value="blue-theme">🔵 Bleu</option>
+  <option value="onepiece-theme">🏴‍☠️ One Piece</option>
+
+</select>
 
 
 
@@ -101,26 +107,40 @@
       <footer class="bg-dark text-white py-4 mt-5">
   <div class="container text-center">
     <h5 class="mb-4">Suivez-nous sur les réseaux sociaux</h5>
-    <div class="d-flex justify-content-center gap-3">
+
+    <div class="d-flex justify-content-center align-items-center flex-wrap gap-4 mb-3">
       <a href="https://www.snapchat.com/web?ref=homepage_auto_redirect" target="_blank">
-        <img src="{{ asset('images/principal/snapchat.jpeg') }}" alt="Snapchat" width="50" height="40">
+        <img src="{{ asset('asset/images/snapchat.jpeg') }}" alt="Snapchat" width="50" height="50" style="object-fit: cover;">
       </a>
+
+      <a href="https://www.tiktok.com/" target="_blank">
+        <img src="{{ asset('asset/images/tiktok.png') }}" alt="TikTok" width="50" height="50" style="object-fit: cover;">
+      </a>
+
       <a href="https://x.com/home" target="_blank">
-        <img src="{{ asset('images/principal/X.png') }}" alt="X / Twitter" width="50" height="40">
+        <img src="{{ asset('asset/images/X.png') }}" alt="X / Twitter" width="50" height="50" style="object-fit: cover;">
       </a>
+
       <a href="https://www.instagram.com/" target="_blank">
-        <img src="{{ asset('images/principal/Insta_Qasebal.png') }}" alt="Instagram" width="50" height="40">
+        <img src="{{ asset('asset/images/Insta_Qasebal.png') }}" alt="Instagram" width="50" height="50" style="object-fit: cover;">
       </a>
+
       <a href="https://www.facebook.com/?locale=fr_FR" target="_blank">
-        <img src="{{ asset('build/images/principal/facebook_quasebal.png') }}" alt="Facebook">
-height="40">
+        <img src="{{ asset('asset/images/facebook_quasebal.png') }}" alt="Facebook" width="50" height="50" style="object-fit: cover;">
       </a>
-      <br>
-      <p>Quasebal@gmail.com</p>
-      </br>
     </div>
+
+<p class="mb-0">
+  📧
+  <a href="https://mail.google.com/mail/?view=cm&fs=1&to=Quasebal@gmail.com"
+     class="text-white text-decoration-underline">
+    Quasebal@gmail.com
+  </a>
+</p>
   </div>
 </footer>
+
+
 
     {% include 'partials/_footer.html.twig' ignore missing %}
 

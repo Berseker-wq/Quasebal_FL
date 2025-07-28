@@ -1,0 +1,36 @@
+{# templates/catalogue/categorie_plats.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<h1>Plats dans la catégorie : {{ categorie.libelle }}</h1>
+
+{% if plats is empty %}
+    <p>Aucun plat trouvé dans cette catégorie.</p>
+{% else %}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for plat in plats %}
+            <div class="col">
+                <div class="card h-100">
+                    {% if plat.image %}
+                        <img src="{{ asset('uploads/images/' ~ plat.image) }}" class="card-img-top" alt="Image de {{ plat.libelle }}">
+                    {% else %}
+                        <img src="{{ asset('images/default-plat.jpg') }}" class="card-img-top" alt="Image par défaut">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ plat.libelle }}</h5>
+                        <p class="card-text">{{ plat.description|default('Pas de description') }}</p>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">Prix : {{ plat.prix }} €</small>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<a href="{{ path('app_catalogue_categories') }}" class="btn btn-primary mt-4">
+    ← Retour aux catégories
+</a>
+
+{% endblock %}

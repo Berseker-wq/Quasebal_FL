@@ -6,48 +6,55 @@ use App\Entity\Categorie;
 use App\Repository\PlatRepository;
 use App\Repository\CategorieRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Filesystem\Filesystem;
 
 final class CatalogueController extends AbstractController
 {
-  #[Route('/', name: 'app_catalogue')]
-public function index(CategorieRepository $categorieRepository, PlatRepository $platRepository): Response
-{
-    $categories = $categorieRepository->findAll();
+    #[Route('/', name: 'app_catalogue')]
+    public function index(CategorieRepository $categorieRepository, PlatRepository $platRepository): Response
+    {
+        $categories = $categorieRepository->findAll();
 
-    // On récupère les plats actifs (menu du jour)
-    $plats = $platRepository->findBy(['active' => true]);
+        // On récupère les plats actifs (menu du jour)
+        $plats = $platRepository->findBy(['active' => true]);
 
-  // 1. Répertoire public
-    $publicDirPath = $this->getParameter('kernel.project_dir') . '/public';
+        // 1. Répertoire public
+        $publicDirPath = $this->getParameter('kernel.project_dir') . '/public';
 
-    // 2. Chemin relatif du fichier vidéo
-    $videoRelativePath = 'asset/video/Cuisine_gastro.mp4';
+        // 2. Chemin relatif du fichier vidéo
+        $videoRelativePath = 'asset/video/Cuisine_gastro.mp4';
 
-    // 3. Chemin absolu complet
-    $videoFullPath = $publicDirPath . '/' . $videoRelativePath;
+        // 3. Chemin absolu complet
+        $videoFullPath = $publicDirPath . '/' . $videoRelativePath;
 
-    // 4. Vérification d’existence
-    $filesystem = new Filesystem();
-    $videoExists = $filesystem->exists($videoFullPath);
+        // 4. Vérification d’existence
+        $filesystem = new Filesystem();
+        $videoExists = $filesystem->exists($videoFullPath);
 
-
-    return $this->render('catalogue/index.html.twig', [
-        'categories' => $categories,
-        'plats' => $plats,
-        'videoExists' => $videoExists,
-    ]);
-}
+        return $this->render('catalogue/index.html.twig', [
+            'categories' => $categories,
+            'plats' => $plats,
+            'videoExists' => $videoExists,
+        ]);
+    }
 
     #[Route('/plats', name: 'app_catalogue_plats')]
-    public function plats(PlatRepository $platRepository): Response
+    public function plats(Request $request, PlatRepository $platRepository): Response
     {
-        $plats = $platRepository->findAll();
+        $query = $request->query->get('q');
         
+        if ($query) {
+            $plats = $platRepository->searchByKeyword($query);
+        } else {
+            $plats = $platRepository->findAll();
+        }
+
         return $this->render('catalogue/plats.html.twig', [
             'plats' => $plats,
+            'searchQuery' => $query,
         ]);
     }
 
@@ -71,5 +78,4 @@ public function index(CategorieRepository $categorieRepository, PlatRepository $
             'categories' => $categories,
         ]);
     }
-    
 }
