@@ -4,15 +4,8 @@ import './styles/app.css';
 console.log('JS chargé avec succès !');
 
 /*
- * Welcome to your app's main JavaScript file!
- *
- * This file will be included onto the page via the importmap() Twig function,
- * which should already be in your base.html.twig.
+ * Thèmes multiples (clair, sombre, sépia, bleu, One Piece)
  */
-
-// ========================
-// Thèmes multiples (clair, sombre, sépia, bleu, One Piece)
-// ========================
 const selector = document.getElementById("theme-selector");
 const body = document.body;
 const themes = ["light-theme", "dark-theme", "sepia-theme", "blue-theme", "onepiece-theme"];
@@ -37,3 +30,61 @@ if (selector) {
     localStorage.setItem("theme", selected);
   });
 }
+
+// --- Stripe Payment Form JS ---
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  submitButton.disabled = true;
+  spinner.classList.remove('d-none');
+  submitText.textContent = 'Paiement en cours...';
+  cardErrors.textContent = '';
+
+  // Timeout pour éviter blocage long (ex: 30s)
+  const timeoutPromise = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error('Timeout réseau, merci de réessayer')), 30000)
+  );
+
+  try {
+    const { paymentMethod, error } = await Promise.race([
+      stripe.createPaymentMethod({ type: 'card', card }),
+      timeoutPromise,
+    ]);
+
+    if (error) throw error;
+
+    const response = await Promise.race([
+      fetch(form.action, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ paymentMethodId: paymentMethod.id }),
+      }),
+      timeoutPromise,
+    ]);
+
+    const result = await response.json();
+
+    if (result.error) throw new Error(result.error);
+
+    if (result.requiresAction) {
+      const confirmation = await Promise.race([
+        stripe.confirmCardPayment(result.paymentIntentClientSecret),
+        timeoutPromise,
+      ]);
+
+      if (confirmation.error) throw confirmation.error;
+
+      window.location.href = result.redirect ?? '/commande/confirmation';
+    } else if (result.success) {
+      window.location.href = result.redirect;
+    } else {
+      throw new Error('Erreur inconnue lors du paiement.');
+    }
+  } catch (err) {
+    cardErrors.textContent = err.message;
+    spinner.classList.add('d-none');
+    submitText.textContent = 'Payer';
+    submitButton.disabled = false;
+  }
+});

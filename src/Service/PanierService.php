@@ -10,13 +10,17 @@ class PanierService
     private SessionInterface $session;
 
     private array $produits = [
-        25 => ['nom' => 'Sushi', 'prix' => 11, 'image' => 'images/produit_a.jpg'],
-        26 => ['nom' => 'Gyoza', 'prix' => 9, 'image' => 'images/produit_b.jpg'],
-        27 => ['nom' => 'Vin Blanc', 'prix' => 3, 'image' => 'images/produit_c.jpg'],
-        28 => ['nom' => 'Tajine', 'prix' => 13, 'image' => 'images/produit_d.jpg'],
-        29 => ['nom' => 'Millefeuille de champignions duxelles', 'prix' => 25, 'image' => 'images/produit_e.jpg'],
-        30 => ['nom' => 'Chevreuil en sauce sur armure blanche', 'prix' => 35, 'image' => 'images/produit_f.jpg'],
-        31 => ['nom' => 'Chevreuil en sauce sur armure blanche', 'prix' => 6, 'image' => 'images/produit_g.jpg'],
+        25 => ['nom' => 'Sushi X12', 'prix' => 18.70, 'image' => 'images/produit_a.jpg'],
+        26 => ['nom' => 'Gyoza X3', 'prix' => 5.53, 'image' => 'images/produit_b.jpg'],
+        27 => ['nom' => 'Vin Blanc', 'prix' => 5.10, 'image' => 'images/produit_c.jpg'],
+        28 => ['nom' => 'Tajine', 'prix' => 12.75, 'image' => 'images/produit_d.jpg'],
+        29 => ['nom' => 'Millefeuille de champignions duxelles', 'prix' => 12.75, 'image' => 'images/produit_e.jpg'],
+        30 => ['nom' => 'Chevreuil en sauce sur armure blanche', 'prix' => 25.50, 'image' => 'images/produit_f.jpg'],
+        31 => ['nom' => 'Maki X3', 'prix' => 6, 'image' => 'images/produit_g.jpg'],
+        33 => ['nom' => 'Omurice', 'prix' => 11.50, 'image' => 'images/produit_h.jpg'],
+        34 => ['nom' => 'Bière Blonde', 'prix' => 4.25, 'image' => 'images/produit_i.jpg'],
+        35 => ['nom' => 'Bière Brune', 'prix' => 4.68, 'image' => 'images/produit_j.jpg'],
+        36 => ['nom' => 'Cocktail caiprinha ', 'prix' => 8.50, 'image' => 'images/produit_k.jpg'],
     ];
 
     public function __construct(RequestStack $requestStack)

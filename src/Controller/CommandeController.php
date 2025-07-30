@@ -13,6 +13,10 @@ use Symfony\Component\Mailer\MailerInterface;
 use App\Service\PanierService;
 use Stripe\Stripe;
 use Stripe\Charge;
+use Symfony\Component\Security\Core\User\UserInterface;
+use App\Repository\CommandeRepository;
+use Stripe\StripeClient;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
 class CommandeController extends AbstractController
@@ -78,7 +82,7 @@ class CommandeController extends AbstractController
         ]);
     }
 
-    #[Route('/paiement/cb/api', name: 'app_paiement_cb_api', methods: ['POST'])]
+  #[Route('/paiement/cb/api', name: 'app_paiement_cb_api', methods: ['POST'])]
 #[IsGranted('ROLE_USER')]
 public function paiementCbApi(Request $request): JsonResponse
 {
@@ -86,35 +90,54 @@ public function paiementCbApi(Request $request): JsonResponse
     $commandeData = $session->get('commande_data');
 
     if (!$commandeData) {
-        return new JsonResponse(['success' => false, 'message' => 'Commande introuvable']);
+        return new JsonResponse(['error' => 'Commande introuvable']);
     }
 
     $data = json_decode($request->getContent(), true);
-    $token = $data['stripeToken'] ?? null;
+    $paymentMethodId = $data['paymentMethodId'] ?? null;
 
-    if (!$token) {
-        return new JsonResponse(['success' => false, 'message' => 'Token manquant']);
+    if (!$paymentMethodId) {
+        return new JsonResponse(['error' => 'paymentMethodId manquant']);
     }
 
-    Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
-
     try {
-        $charge = Charge::create([
-            'amount' => intval($commandeData['total'] * 100),
-            'currency' => 'eur',
-            'source' => $token,
-            'description' => 'Paiement CB - Commande Symfony',
-        ]);
+        $stripe = new StripeClient($_ENV['STRIPE_SECRET_KEY']);
 
-        // ✅ NE PAS envoyer d'e-mail ici
-        // ✅ NE PAS supprimer la session ici
+       $paymentIntent = $stripe->paymentIntents->create([
+    'amount' => intval($commandeData['total'] * 100),
+    'currency' => 'eur',
+    'payment_method' => $paymentMethodId,
+    'confirmation_method' => 'manual',
+    'confirm' => true,
+    'description' => 'Paiement CB - Commande Symfony',
+    'payment_method_options' => [
+        'card' => [
+            'request_three_d_secure' => 'automatic',
+        ],
+    ],
+    'return_url' => $this->generateUrl('app_confirmation', [], UrlGeneratorInterface::ABSOLUTE_URL),
+]);
 
-        return new JsonResponse([
-            'success' => true,
-            'redirect' => $this->generateUrl('app_confirmation')
-        ]);
+
+        if ($paymentIntent->status === 'requires_action') {
+            // Nécessite authentification 3D Secure
+            return new JsonResponse([
+                'requiresAction' => true,
+                'paymentIntentClientSecret' => $paymentIntent->client_secret,
+            ]);
+        } elseif ($paymentIntent->status === 'succeeded') {
+            // Paiement OK
+            return new JsonResponse([
+                'success' => true,
+                'redirect' => $this->generateUrl('app_confirmation'),
+            ]);
+        } else {
+            return new JsonResponse([
+                'error' => 'Paiement non finalisé, status: ' . $paymentIntent->status,
+            ]);
+        }
     } catch (\Exception $e) {
-        return new JsonResponse(['success' => false, 'message' => $e->getMessage()]);
+        return new JsonResponse(['error' => $e->getMessage()]);
     }
 }
 
@@ -201,16 +224,19 @@ private function envoyerEmailConfirmation(array $commandeData, MailerInterface $
         
     $mailer->send($email);
 }
-#[Route('/commande/historique', name: 'app_commande_historique', methods: ['GET'])]
+
+#[Route('/mes-commandes', name: 'app_mes_commandes', methods: ['GET'])]
 #[IsGranted('ROLE_USER')]
-public function historique(Request $request): Response
-{
-    $session = $request->getSession();
-    $historique = $session->get('historique_commandes', []);
+public function mesCommandes(
+    UserInterface $user,
+    CommandeRepository $commandeRepository
+): Response {
+    $commandes = $commandeRepository->findBy(['user' => $user]);
 
     return $this->render('commande/historique.html.twig', [
-        'historique' => $historique,
+        'commandes' => $commandes,
     ]);
 }
+
 
 }

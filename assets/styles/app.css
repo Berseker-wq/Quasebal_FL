@@ -159,3 +159,37 @@ body.onepiece-theme footer {
   background-color: #0b3d91;
   color: #fff;
 }
+
+    .profil-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 50px;
+    }
+
+    .profil-card {
+        background-color: #2f3136;
+        padding: 2rem;
+        border-radius: 10px;
+        color: white;
+        width: 400px;
+        text-align: center;
+        box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    .profil-avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 1rem;
+    }
+
+    .btn-edit {
+        display: inline-block;
+        margin-top: 1rem;
+        padding: 0.5rem 1rem;
+        background-color: #7289da;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+    }

@@ -1,25 +1,20 @@
-<h1>Historique des commandes</h1>
+{% extends 'base.html.twig' %}
 
-{% if historique is empty %}
-    <p>Aucune commande passée.</p>
-{% else %}
-    <ul>
-        {% for commande in historique %}
-            <li>
-                <strong>Date :</strong> {{ commande.date }}<br>
-                <strong>Nom :</strong> {{ commande.nom }}<br>
-                <strong>Adresse :</strong> {{ commande.adresse }}<br>
-                <strong>Email :</strong> {{ commande.email }}<br>
-                <strong>Téléphone :</strong> {{ commande.telephone }}<br>
-                <strong>Total :</strong> {{ commande.total }} €<br>
-                <strong>Mode de paiement :</strong> {{ commande.modePaiement }}<br>
-                <strong>Produits :</strong>
-                <ul>
-                    {% for produit in commande.produitsPanier %}
-                        <li>{{ produit.nom }} x{{ produit.quantite }} - {{ produit.prix }} €</li>
-                    {% endfor %}
-                </ul>
-            </li>
-        {% endfor %}
-    </ul>
-{% endif %}
+{% block body %}
+    <h1>Mes paiements</h1>
+
+    {% if paiements is empty %}
+        <p>Vous n'avez encore effectué aucun paiement.</p>
+    {% else %}
+        <ul class="paiement-list">
+            {% for paiement in paiements %}
+                <li>
+                    Paiement du {{ paiement.date|date('d/m/Y H:i') }} – 
+                    {{ paiement.montant|number_format(2, ',', ' ') }} € – 
+                    Statut : <strong>{{ paiement.statut|capitalize }}</strong> – 
+                    Méthode : {{ paiement.type|capitalize }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

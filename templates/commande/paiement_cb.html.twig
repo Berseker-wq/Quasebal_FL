@@ -1,121 +1,81 @@
-{# templates/commande/paiement_cb.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Paiement Carte Bancaire{% endblock %}
+{% block title %}Paiement CB{% endblock %}
 
 {% block body %}
-<div class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <h2 class="mb-4 text-center">Paiement sécurisé</h2>
+<h2>Paiement par Carte Bancaire</h2>
 
-      <h5 class="mb-3">Détails de la commande :</h5>
-      <ul class="list-group mb-4">
-        {% for produit in produitsPanier %}
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div class="d-flex align-items-center">
-              <img src="{{ asset(produit.image) }}" alt="{{ produit.nom }}" width="60" height="60" class="me-3 rounded shadow-sm" style="object-fit: cover;">
-              <div>
-                <strong>{{ produit.nom }}</strong><br>
-                Quantité : {{ produit.quantite }}
-              </div>
-            </div>
-            <span class="fw-bold">{{ produit.totalProduit|number_format(2, ',', '.') }} €</span>
-          </li>
-        {% else %}
-          <li class="list-group-item text-muted">Aucun produit dans le panier.</li>
-        {% endfor %}
-      </ul>
+<form id="payment-form" action="{{ path('app_paiement_cb_api') }}" method="POST">
+    <div id="card-element"><!-- Stripe Card Element --></div>
+    <div id="card-errors" class="text-danger mt-2"></div>
+    
 
-      <div class="card shadow-lg rounded-4">
-        <div class="card-body p-4">
-          <p class="mb-3">Montant à régler : <strong>{{ total }} €</strong></p>
-
-          <form id="payment-form">
-            <label for="card-element" class="form-label">Informations bancaires :</label>
-            <div id="card-element" class="form-control p-3 mb-3 rounded"></div>
-            <div id="card-errors" class="text-danger mb-3" role="alert"></div>
-            <button id="submit" class="btn btn-primary w-100" type="submit">
-              <span id="submit-text">Payer</span>
-              <div id="spinner" class="spinner-border spinner-border-sm d-none ms-2" role="status"></div>
-            </button>
-          </form>
-        </div>
-      </div>
-
-      <p class="text-muted text-center mt-4">
-        Paiement sécurisé via <strong>Stripe</strong>. Aucune donnée bancaire n’est stockée sur notre site.
-      </p>
-    </div>
-  </div>
-</div>
+    <button id="submit-button" class="btn btn-primary mt-3">
+        <span id="submit-text">Payer {{ total }} €</span>
+        <span id="spinner" class="spinner-border spinner-border-sm d-none"></span>
+    </button>
+</form>
 
 <script src="https://js.stripe.com/v3/"></script>
 <script>
-  const stripe = Stripe("{{ stripe_public_key }}");
-  const elements = stripe.elements();
-  const card = elements.create('card', {
-    style: {
-      base: {
-        color: '#32325d',
-        fontFamily: 'Arial, sans-serif',
-        fontSize: '16px',
-        '::placeholder': { color: '#a0aec0' }
-      },
-      invalid: { color: '#e3342f' }
-    },
-    hidePostalCode: true
-  });
-  card.mount('#card-element');
+    const stripe = Stripe('{{ stripe_public_key }}');
+    const elements = stripe.elements();
+    const card = elements.create('card');
+    card.mount('#card-element');
 
-  const form = document.getElementById('payment-form');
-  const submitButton = document.getElementById('submit');
-  const submitText = document.getElementById('submit-text');
-  const spinner = document.getElementById('spinner');
-  const cardErrors = document.getElementById('card-errors');
+    const form = document.getElementById('payment-form');
+    const submitButton = document.getElementById('submit-button');
+    const spinner = document.getElementById('spinner');
+    const submitText = document.getElementById('submit-text');
+    const cardErrors = document.getElementById('card-errors');
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    submitButton.disabled = true;
-    spinner.classList.remove('d-none');
-    submitText.textContent = 'Paiement en cours...';
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        submitButton.disabled = true;
+        spinner.classList.remove('d-none');
+        submitText.textContent = 'Paiement en cours...';
+        cardErrors.textContent = '';
 
-    const { paymentMethod, error } = await stripe.createPaymentMethod({
-      type: 'card',
-      card: card
-    });
+        try {
+            const { paymentMethod, error } = await stripe.createPaymentMethod({
+                type: 'card',
+                card: card,
+            });
 
-    if (error) {
-      cardErrors.textContent = error.message;
-      spinner.classList.add('d-none');
-      submitText.textContent = 'Payer';
-      submitButton.disabled = false;
-    } else {
-      const response = await fetch('{{ path("app_paiement_cb_api") }}', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ paymentMethodId: paymentMethod.id })
-      });
+            if (error) throw error;
 
-      const result = await response.json();
+            const response = await fetch(form.action, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ paymentMethodId: paymentMethod.id }),
+            });
 
-      if (result.error) {
-        cardErrors.textContent = result.error;
-        spinner.classList.add('d-none');
-        submitText.textContent = 'Payer';
-        submitButton.disabled = false;
-      } else {
-        const confirmation = await stripe.confirmCardPayment(result.clientSecret);
-        if (confirmation.error) {
-          cardErrors.textContent = confirmation.error.message;
-          spinner.classList.add('d-none');
-          submitText.textContent = 'Payer';
-          submitButton.disabled = false;
-        } else {
-          window.location.href = result.redirect;
+            const contentType = response.headers.get("content-type");
+            if (!contentType || !contentType.includes("application/json")) {
+                throw new Error("Erreur serveur : réponse inattendue");
+            }
+
+            const result = await response.json();
+
+            if (result.error) throw new Error(result.error);
+
+            if (result.requiresAction) {
+                const confirmation = await stripe.confirmCardPayment(result.paymentIntentClientSecret);
+                if (confirmation.error) throw confirmation.error;
+
+                window.location.href = result.redirect ?? '/commande/confirmation';
+            } else if (result.success) {
+                window.location.href = result.redirect;
+            } else {
+                throw new Error("Paiement non réussi.");
+            }
+
+        } catch (err) {
+            cardErrors.textContent = err.message;
+            spinner.classList.add('d-none');
+            submitText.textContent = 'Payer {{ total }} €';
+            submitButton.disabled = false;
         }
-      }
-    }
-  });
+    });
 </script>
 {% endblock %}

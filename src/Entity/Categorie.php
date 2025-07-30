@@ -6,28 +6,39 @@ use App\Repository\CategorieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CategorieRepository::class)]
+#[ApiResource(
+    normalizationContext: ['groups' => ['categorie:read']],
+    denormalizationContext: ['groups' => ['categorie:write']]
+)]
 class Categorie
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['categorie:read', 'plat:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['categorie:read', 'categorie:write', 'plat:read'])]
     private ?string $libelle = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['categorie:read', 'categorie:write'])]
     private ?string $image = null;
 
     #[ORM\Column]
+    #[Groups(['categorie:read', 'categorie:write'])]
     private ?bool $active = null;
 
     /**
      * @var Collection<int, Plat>
      */
     #[ORM\OneToMany(targetEntity: Plat::class, mappedBy: 'categorie', orphanRemoval: true)]
+    #[Groups(['categorie:read'])]
     private Collection $plats;
 
     public function __construct()
@@ -97,7 +108,6 @@ class Categorie
     public function removePlat(Plat $plat): static
     {
         if ($this->plats->removeElement($plat)) {
-            // set the owning side to null (unless already changed)
             if ($plat->getCategorie() === $this) {
                 $plat->setCategorie(null);
             }
@@ -107,7 +117,7 @@ class Categorie
     }
 
     public function __toString(): string
-{
-    return $this->libelle ?? '';
-}
+    {
+        return $this->libelle ?? '';
+    }
 }

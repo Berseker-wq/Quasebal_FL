@@ -5,7 +5,9 @@ namespace App\Entity;
 use App\Repository\DetailRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+
 #[ORM\Entity(repositoryClass: DetailRepository::class)]
+
 class Detail
 {
     #[ORM\Id]

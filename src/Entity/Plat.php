@@ -10,36 +10,60 @@ use Doctrine\ORM\Mapping as ORM;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Delete;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PlatRepository::class)]
+#[ApiResource(
+    normalizationContext: ['groups' => ['plat:read']],
+    denormalizationContext: ['groups' => ['plat:write']],
+    operations: [
+        new GetCollection(),
+        new Post(),
+        new Get(),
+        new Put(),
+        new Patch(),
+        new Delete()
+    ]
+)]
 #[Vich\Uploadable]
 class Plat
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['plat:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['plat:read', 'plat:write'])]
     private ?string $libelle = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['plat:read', 'plat:write'])]
     private ?string $description = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
+    #[Groups(['plat:read', 'plat:write'])]
     private ?string $prix = null;
 
-   #[ORM\Column(length: 50, nullable: true)]
-private ?string $image = null;
+    #[ORM\Column(length: 50, nullable: true)]
+    #[Groups(['plat:read', 'plat:write'])]
+    private ?string $image = null;
 
-
-     // Fichier temporaire (non stocké en base)
+    // Fichier temporaire (non stocké en base)
     #[Vich\UploadableField(mapping: 'plat_image', fileNameProperty: 'image')]
+    #[Groups(['plat:write'])]
     private ?File $imageFile = null;
 
-
-
     #[ORM\Column]
+    #[Groups(['plat:read', 'plat:write'])]
     private ?bool $active = null;
 
     /**
@@ -49,12 +73,11 @@ private ?string $image = null;
     private Collection $details;
 
     #[ORM\ManyToOne(inversedBy: 'plats')]
-   #[Assert\NotNull(message: 'La catégorie est obligatoire')]
-private ?Categorie $categorie = null;
+    #[Assert\NotNull(message: 'La catégorie est obligatoire')]
+    #[Groups(['plat:read', 'plat:write'])]
+    private ?Categorie $categorie = null;
 
-    
-
-  public function __construct()
+    public function __construct()
 {
     $this->details = new ArrayCollection();
     $this->active = true; // ✅ ou false selon ta logique métier

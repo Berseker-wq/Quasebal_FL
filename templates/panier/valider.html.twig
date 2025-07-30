@@ -68,18 +68,19 @@
                 <input type="text" class="form-control" name="codePostalFacturation" id="codePostalFacturation" required>
             </div>
             <div class="mb-3">
-            <h3>Mode de paiement</h3>
-            {% for mode, label in {
-                'CB': 'Carte Bancaire',
-                'PayPal': 'PayPal',
-                'Payement en Nature': 'Payement en Nature',
-                'Pas dargent': 'Pas dargent'
-            } %}
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="modePaiement" id="paiement{{ mode }}" value="{{ mode }}" {% if loop.first %}checked{% endif %}>
-                    <label class="form-check-label" for="paiement{{ mode }}">{{ label }}</label>
-                </div>
-            {% endfor %}
+                <h3>Mode de paiement</h3>
+                {% for mode, label in {
+                    'CB': 'Carte Bancaire',
+                    'PayPal': 'PayPal',
+                    'Payement en Nature': 'Payement en Nature',
+                    'Pas dargent': 'Pas dargent'
+                } %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="modePaiement" id="paiement{{ mode }}" value="{{ mode }}" {% if loop.first %}checked{% endif %}>
+                        <label class="form-check-label" for="paiement{{ mode }}">{{ label }}</label>
+                    </div>
+                {% endfor %}
+            </div>
 
             <h4>Résumé du panier :</h4>
             <ul>
@@ -88,15 +89,23 @@
                 {% endfor %}
             </ul>
 
-            <h3>Total : {{ total|number_format(2, '.', ',') }} €</h3>
+            {# Bloc résumé des prix #}
+            <h4>Résumé des prix :</h4>
+            <p>Sous-total : <strong>{{ total|number_format(2, ',', ' ') }} €</strong></p>
+
+            {% if reduction is defined and reduction > 0 %}
+                <p>Réduction : <strong>-{{ reduction|number_format(2, ',', ' ') }} €</strong></p>
+                <h3>Total à payer : <strong>{{ totalAvecReduction|number_format(2, ',', ' ') }} €</strong></h3>
+            {% else %}
+                <h3>Total à payer : <strong>{{ total|number_format(2, ',', ' ') }} €</strong></h3>
+            {% endif %}
 
             <div class="form-check mt-3">
-    <input class="form-check-input" type="checkbox" name="accepter_cgu" id="accepter_cgu" required>
-    <label class="form-check-label" for="accepter_cgu">
-        J'accepte les <a href="{{ path('app_panier') }}" target="_blank">Conditions Générales d'Utilisation</a>.
-    </label>
-</div>
-
+                <input class="form-check-input" type="checkbox" name="accepter_cgu" id="accepter_cgu" required>
+                <label class="form-check-label" for="accepter_cgu">
+                    J'accepte les <a href="{{ path('app_panier') }}" target="_blank">Conditions Générales d'Utilisation</a>.
+                </label>
+            </div>
 
             <button type="submit" class="btn btn-success mt-3">✅ Confirmer ma commande</button>
         </form>
