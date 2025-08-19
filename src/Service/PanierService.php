@@ -10,7 +10,7 @@ class PanierService
     private SessionInterface $session;
 
     private array $produits = [
-        25 => ['nom' => 'Sushi X12', 'prix' => 18.70, 'image' => 'images/produit_a.jpg'],
+        25 => ['nom' => 'Sushi X12', 'prix' => 18.70, 'image' => 'images/sushi.png'],
         26 => ['nom' => 'Gyoza X3', 'prix' => 5.53, 'image' => 'images/produit_b.jpg'],
         27 => ['nom' => 'Vin Blanc', 'prix' => 5.10, 'image' => 'images/produit_c.jpg'],
         28 => ['nom' => 'Tajine', 'prix' => 12.75, 'image' => 'images/produit_d.jpg'],
@@ -111,6 +111,7 @@ public function appliquerCodePromo(string $code): bool
     $this->session->set('code_promo', $code);
     return true;
 }
+
 
 // Supprimer le code promo
 public function retirerCodePromo(): void

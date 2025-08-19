@@ -8,7 +8,7 @@ console.log('JS chargé avec succès !');
  */
 const selector = document.getElementById("theme-selector");
 const body = document.body;
-const themes = ["light-theme", "dark-theme", "sepia-theme", "blue-theme", "onepiece-theme"];
+const themes = ["light-theme", "dark-theme", "sepia-theme", "blue-theme", "japanese-theme"]; // Ajout du thème japonais];
 
 // Appliquer le thème enregistré si présent
 const savedTheme = localStorage.getItem("theme");
@@ -88,3 +88,8 @@ form.addEventListener('submit', async (e) => {
     submitButton.disabled = false;
   }
 });
+document.querySelector('.navbar-toggler').addEventListener('click', () => {
+    console.log('Hamburger cliqué !');
+  });
+
+  

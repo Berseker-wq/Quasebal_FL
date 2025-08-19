@@ -63,8 +63,10 @@
                 const confirmation = await stripe.confirmCardPayment(result.paymentIntentClientSecret);
                 if (confirmation.error) throw confirmation.error;
 
+                alert("🎉 Félicitations, votre commande a bien été enregistrée !");
                 window.location.href = result.redirect ?? '/commande/confirmation';
             } else if (result.success) {
+                alert("🎉 Félicitations, votre commande a bien été enregistrée !");
                 window.location.href = result.redirect;
             } else {
                 throw new Error("Paiement non réussi.");

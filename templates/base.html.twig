@@ -10,7 +10,8 @@
 
     <!-- Feuille de style personnalisée -->
    <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
-
+   {{ encore_entry_link_tags('app') }}
+   {{ encore_entry_link_tags('app1') }}
 
 
     {% block stylesheets %}{% endblock %}
@@ -29,6 +30,7 @@
                 data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01"
                 aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
+          <nav class="navbar navbar-expand-lg navbar-dark">
         </button>
         <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -41,6 +43,8 @@
             <li class="nav-item">
               <a class="nav-link" href="{{ path('app_catalogue_categories') }}">Catégories</a>
             </li>
+            <li class="nav-item">
+            <a class="nav-link" href="{{ path('app_localisation') }}">Localisation</a>
               <li class="nav-item">
               <a class="nav-link" href="{{ path('app_registration') }}">Inscription</a>
             </li>
@@ -93,7 +97,8 @@
   <option value="dark-theme">🌙 Sombre</option>
   <option value="sepia-theme">📜 Sépia</option>
   <option value="blue-theme">🔵 Bleu</option>
-  <option value="onepiece-theme">🏴‍☠️ One Piece</option>
+  <option value="japanese-theme">🇯🇵 Japonais</option>
+  <!-- <option value="onepiece-theme">🏴‍☠️ One Piece</option> -->
 
 </select>
 
@@ -151,6 +156,7 @@
             crossorigin="anonymous"></script>
           
           <script src="{{ asset('assets/app.js') }}"></script>
+          {{ encore_entry_script_tags('app1') }}
 
 
 

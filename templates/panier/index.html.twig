@@ -99,6 +99,9 @@ tbody tr:hover {
       <p><strong>Réduction :</strong> -{{ (reduction|default(0))|number_format(2, '.', ',') }} €</p>
 <h3><strong>Total à payer :</strong> {{ (totalAvecReduction|default(total))|number_format(2, '.', ',') }} €</h3>
     </div>
+    <a href="{{ path('app_catalogue_plats') }}" class="btn btn-secondary">Retour aux plats</a>
+    
+    {# Bouton de validation #}
 
     <a href="{{ path('app_panier_valider') }}" class="btn btn-success mt-4">✅ Valider le panier</a>
 {% endif %}

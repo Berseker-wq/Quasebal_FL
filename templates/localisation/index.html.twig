@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nos localisations{% endblock %}
+
+{% block body %}
+<h1>Localisations</h1>
+
+{% for localisation in localisations %}
+    <div class="localisation">
+        <img src="{{ asset('images/' ~ localisation.image) }}" 
+             alt="{{ localisation.ville }}" style="width:200px;height:auto;">
+
+        <p>Nom : {{ localisation.nom }}</p>
+        <p>Ville : {{ localisation.ville }}</p>
+        <p>Rue : {{ localisation.rue }}</p>
+        <p>Code Postal : {{ localisation.codePostal }}</p>
+        <p>Email : {{ localisation.email }}</p>
+        <p>Téléphone : {{ localisation.telephone }}</p>
+    </div>
+    <hr>
+{% endfor %}
+
+{% endblock %}

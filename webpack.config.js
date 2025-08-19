@@ -13,6 +13,8 @@ Encore
 
     // Each entry will result in one JavaScript file (e.g. app.js) and one CSS file if CSS is imported
     .addEntry('app', './assets/app.js')
+    .addEntry('app1', './react/app1/index.js')
+
 
     // When enabled, Webpack splits your files into smaller pieces for optimization
     .splitEntryChunks()
@@ -42,7 +44,7 @@ Encore
     //.enableTypeScriptLoader()
 
     // Uncomment if you use React
-    //.enableReactPreset()
+    .enableReactPreset()
 
     // Uncomment to get integrity attributes (requires WebpackEncoreBundle 1.4+)
     //.enableIntegrityHashes(Encore.isProduction())
@@ -58,3 +60,4 @@ Encore
 //;
 
 module.exports = Encore.getWebpackConfig();
+

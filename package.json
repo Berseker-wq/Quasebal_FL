@@ -2,6 +2,7 @@
   "devDependencies": {
     "@babel/core": "^7.17.0",
     "@babel/preset-env": "^7.16.0",
+    "@babel/preset-react": "^7.9.0",
     "@symfony/webpack-encore": "^5.1.0",
     "core-js": "^3.38.0",
     "file-loader": "^6.2.0",
@@ -33,5 +34,9 @@
     "url": "https://github.com/Berseker-wq/Quasebal_FL/issues"
   },
   "homepage": "https://github.com/Berseker-wq/Quasebal_FL#readme",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  }
 }
