@@ -8,6 +8,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class LocalisationController extends AbstractController
 {
+    /**
+     * Page de localisation des restaurants
+     * - Affiche une liste de tous les restaurants avec leurs informations
+     * - Chaque restaurant a un nom, une ville, une adresse, un code postal, un email, un téléphone et une image
+     */
     #[Route('/localisation', name: 'app_localisation')]
     public function index(): Response
     {

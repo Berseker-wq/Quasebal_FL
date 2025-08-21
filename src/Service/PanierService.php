@@ -21,6 +21,10 @@ class PanierService
         34 => ['nom' => 'Bière Blonde', 'prix' => 4.25, 'image' => 'images/produit_i.jpg'],
         35 => ['nom' => 'Bière Brune', 'prix' => 4.68, 'image' => 'images/produit_j.jpg'],
         36 => ['nom' => 'Cocktail caiprinha ', 'prix' => 8.50, 'image' => 'images/produit_k.jpg'],
+        37 => ['nom' => 'Pastilla', 'prix' => 10, 'image' => 'images/produit_l.jpg'],
+        38 => ['nom' => 'Pizza 4 fromages', 'prix' => 12, 'image' => 'images/produit_m.jpg'],
+        39 => ['nom' => 'Pizza Grecque', 'prix' => 12, 'image' => 'images/produit_n.jpg'],
+        40 => ['nom' => 'Pizza Newyorkaise', 'prix' => 12, 'image' => 'images/produit_o.jpg'],
     ];
 
     public function __construct(RequestStack $requestStack)

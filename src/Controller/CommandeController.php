@@ -21,6 +21,12 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class CommandeController extends AbstractController
 {
+    /**
+     * Page de validation de la commande
+     * - Affiche les produits du panier
+     * - Permet de saisir les informations de la commande
+     * - Gère le mode de paiement (CB ou PayPal)
+     */
     #[Route('/commande', name: 'app_commande', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
    public function index(Request $request, PanierService $panierService): Response
@@ -64,6 +70,11 @@ class CommandeController extends AbstractController
         ]);
     }
 
+    /**
+     * Page de paiement par carte bancaire
+     * - Affiche le formulaire de paiement
+     * - Gère la logique de paiement via Stripe
+     */
     #[Route('/paiement/cb', name: 'app_paiement_cb', methods: ['GET'])]
     #[IsGranted('ROLE_USER')]
     public function paiementCb(Request $request): Response
@@ -82,6 +93,11 @@ class CommandeController extends AbstractController
         ]);
     }
 
+    /**
+     * API pour le paiement par carte bancaire
+     * - Reçoit les données du formulaire de paiement
+     * - Gère la logique de paiement via Stripe
+     */
   #[Route('/paiement/cb/api', name: 'app_paiement_cb_api', methods: ['POST'])]
 #[IsGranted('ROLE_USER')]
 public function paiementCbApi(Request $request): JsonResponse
@@ -141,6 +157,11 @@ public function paiementCbApi(Request $request): JsonResponse
     }
 }
 
+    /**
+     * Page de paiement PayPal
+     * - Affiche le formulaire de paiement
+     * - Gère la logique de paiement via PayPal
+     */
     #[Route('/paiement/paypal', name: 'app_paiement_paypal', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
     public function paiementPaypal(Request $request, MailerInterface $mailer): Response
@@ -163,6 +184,12 @@ public function paiementCbApi(Request $request): JsonResponse
         ]);
     }
 
+    /**
+     * Page de confirmation de la commande
+     * - Affiche les détails de la commande
+     * - Enregistre dans l'historique des commandes
+     * - Envoie un email de confirmation
+     */
    #[Route('/commande/confirmation', name: 'app_confirmation', methods: ['GET'])]
 #[IsGranted('ROLE_USER')]
 public function confirmation(Request $request, MailerInterface $mailer): Response
@@ -225,6 +252,10 @@ private function envoyerEmailConfirmation(array $commandeData, MailerInterface $
     $mailer->send($email);
 }
 
+    /**
+     * Page qui affiche l'historique des commandes de l'utilisateur
+     * - Affiche toutes les commandes passées par l'utilisateur connecté
+     */
 #[Route('/mes-commandes', name: 'app_mes_commandes', methods: ['GET'])]
 #[IsGranted('ROLE_USER')]
 public function mesCommandes(

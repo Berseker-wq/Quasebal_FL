@@ -12,6 +12,11 @@ use Symfony\Component\Mime\Email;
 
 class ContactController extends AbstractController
 {
+    /**
+     * Page de contact
+     * - Permet à l'utilisateur d'envoyer un message
+     * - Envoie un email à l'adresse spécifiée
+     */
     #[Route('/contact', name: 'app_contact', methods: ['GET', 'POST'])]
     public function contact(Request $request, MailerInterface $mailer): Response
     {

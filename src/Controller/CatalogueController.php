@@ -13,6 +13,12 @@ use Symfony\Component\Filesystem\Filesystem;
 
 final class CatalogueController extends AbstractController
 {
+     /**
+     * Page d'accueil du catalogue
+     * - Affiche toutes les catégories
+     * - Affiche uniquement les plats actifs (ex : menu du jour)
+     * - Vérifie si une vidéo de présentation existe dans /public/asset/video/
+     */
     #[Route('/', name: 'app_catalogue')]
     public function index(CategorieRepository $categorieRepository, PlatRepository $platRepository): Response
     {
@@ -40,7 +46,11 @@ final class CatalogueController extends AbstractController
             'videoExists' => $videoExists,
         ]);
     }
-
+      /**
+     * Page qui affiche tous les plats
+     * - Si un mot-clé est fourni en paramètre GET (?q=...), on filtre
+     * - Sinon, on affiche tous les plats
+     */
     #[Route('/plats', name: 'app_catalogue_plats')]
     public function plats(Request $request, PlatRepository $platRepository): Response
     {
@@ -57,7 +67,11 @@ final class CatalogueController extends AbstractController
             'searchQuery' => $query,
         ]);
     }
-
+     /**
+     * Page qui affiche les plats d'une catégorie spécifique
+     * - L'ID de la catégorie est passé dans l'URL
+     * - Exemple : /categorie/2
+     */
     #[Route('/categorie/{id}', name: 'app_catalogue_categorie_plats')]
     public function platsParCategorie(Categorie $categorie, PlatRepository $platRepository): Response
     {
@@ -69,6 +83,9 @@ final class CatalogueController extends AbstractController
         ]);
     }
 
+     /**
+     * Page qui liste toutes les catégories
+     */
     #[Route('/categories', name: 'app_catalogue_categories')]
     public function categories(CategorieRepository $categorieRepository): Response
     {

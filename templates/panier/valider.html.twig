@@ -72,8 +72,6 @@
                 {% for mode, label in {
                     'CB': 'Carte Bancaire',
                     'PayPal': 'PayPal',
-                    'Payement en Nature': 'Payement en Nature',
-                    'Pas dargent': 'Pas dargent'
                 } %}
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="modePaiement" id="paiement{{ mode }}" value="{{ mode }}" {% if loop.first %}checked{% endif %}>
